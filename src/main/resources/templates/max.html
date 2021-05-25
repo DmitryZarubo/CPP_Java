@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<form action="/max" method="post">
+    <div>Число1: <label>
+        <input type="text" name="inputNumber1" style="width: 50px" />
+    </label></div>
+    <div>Число2: <label>
+        <input type="text" name="inputNumber2" style="width: 50px" />
+    </label></div>
+    <div>Число3: <label>
+        <input type="text" name="inputNumber3" style="width: 50px" />
+    </label></div>
+    <div th:text="${message}"></div>
+    <br>
+    <button type="submit">Посчитать</button>
+</form>
+<form action="/database" method="post">
+    <button type="submit">История ввода</button>
+</form>
+</body>
+</html>

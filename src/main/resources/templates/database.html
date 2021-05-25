@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Database</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<form action="/showDatabase" method="post" >
+  <div>
+    <button type="submit">Показать историю</button>
+    <p th:utext="${database}"/>
+  </div>
+</form>
+<form action="/backDatabase" method="post" >
+  <div>
+    <button type="submit">Вернуться</button>
+  </div>
+</form>
+<form action="/sortByPosition" method="post" >
+  <div>
+    <button type="submit">Отсортировать по максимальному значению</button>
+  </div>
+</form>
+</body>
+</html>
