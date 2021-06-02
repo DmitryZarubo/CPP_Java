@@ -1,7 +1,9 @@
 package com.example.laba1.controllers;
 
+import com.example.laba1.cache.CacheMax;
 import com.example.laba1.exceptions.InputException;
 import com.example.laba1.parametrs.Max;
+import com.example.laba1.parametrs.MinMaxAverageClass;
 import com.example.laba1.service.FileWorkerService;
 import com.example.laba1.validator.Validator;
 import org.springframework.stereotype.Controller;
@@ -13,11 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+
 @Controller
 public class MaxController {
 
     private static final Logger logger = LogManager.getLogger();
     private static final String DATABASE = "D:\\database.txt";
+    private static final CacheMax cache = new CacheMax();
 
     @GetMapping("/max")
     public String main(Model model) {
@@ -40,18 +45,36 @@ public class MaxController {
             int numb2 = Integer.parseInt(inputNumber2);
             int numb3 = Integer.parseInt(inputNumber3);
             Max max = new Max(numb1, numb2, numb3);
+            cache.addToMap(max);
             model.addAttribute("message", "Максимальное: " + max.getValue());
             fileWorker.write(DATABASE, max);
             logger.info("Result: " + max.getValue());
-        }
-        catch (InputException ex) {
+        } catch (InputException ex) {
             logger.error("Exception: " + ex.getMessage());
             model.addAttribute("message", ex.getMessage());
         }
         return "max";
     }
+
     @PostMapping("/database")
     public String database(Model model) {
         return "database";
+    }
+
+    @PostMapping("/bulk")
+    public Max bulkController(@RequestParam ArrayList<Integer> arrayList) {
+        int maxValue = arrayList.stream().max(Integer::compare).get();
+        Max max = new Max(arrayList.get(0), arrayList.get(1), arrayList.get(2));
+        cache.addToMap(max);
+        return max;
+    }
+
+    @PostMapping("/agr")
+    public MinMaxAverageClass agrController(@RequestParam ArrayList<Integer> arrayList) {
+        int maxValue = arrayList.stream().max(Integer::compare).get();
+        int minValue = arrayList.stream().min(Integer::compare).get();
+        double averageValue = arrayList.stream().mapToInt(Integer::intValue).summaryStatistics().getAverage();
+        cache.addToMap(new Max(arrayList.get(0), arrayList.get(1), arrayList.get(2)));
+        return new MinMaxAverageClass(minValue, maxValue, averageValue);
     }
 }
